@@ -38,4 +38,19 @@ public class ArticleController {
 
 		return "index";
 	}
+
+	/**
+	 * 記事を投稿する.<br>
+	 * 投稿後は投稿一覧画面にリダイレクトする。
+	 * 
+	 * @param name    投稿者名
+	 * @param content 投稿内容
+	 * @return 投稿一覧画面へのリダイレクト
+	 */
+	@RequestMapping("/insert-article")
+	public String insertArticle(String name, String content) {
+		repository.insert(name, content);
+
+		return "redirect:/";
+	}
 }
