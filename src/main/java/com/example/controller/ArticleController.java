@@ -51,14 +51,15 @@ public class ArticleController {
 	 */
 	@RequestMapping("/")
 	public String index(Model model) {
-		List<Article> articleList = articleRepository.findAll();
+//		List<Article> articleList = articleRepository.findAll();
+		List<Article> articleList = articleRepository.findAllWithComment();
 		// Map<Integer, List<Comment>> commentMap = new LinkedHashMap<>();
 
-		for (Article article : articleList) {
-			article.setCommentList(commentRepository.findByArticleId(article.getId()));
-			// commentMap.put(article.getId(),
-			// commentRepository.findByArticleId(article.getId()));
-		}
+//		for (Article article : articleList) {
+//			article.setCommentList(commentRepository.findByArticleId(article.getId()));
+//			// commentMap.put(article.getId(),
+//			// commentRepository.findByArticleId(article.getId()));
+//		}
 
 		model.addAttribute("articleList", articleList);
 		// model.addAttribute("commentMap", commentMap);
