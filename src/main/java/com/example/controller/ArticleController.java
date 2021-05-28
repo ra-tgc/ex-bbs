@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,8 +77,8 @@ public class ArticleController {
 	@RequestMapping("/insert-article")
 	public String insertArticle(ArticleForm form) {
 		Article article = new Article();
-		article.setName(form.getName());
-		article.setContent(form.getContent());
+		BeanUtils.copyProperties(form, article);
+
 		articleRepository.insert(article);
 
 		return "redirect:/";
@@ -94,10 +95,24 @@ public class ArticleController {
 	@RequestMapping("/insert-comment")
 	public String insertComment(CommentForm form) {
 		Comment comment = new Comment();
-		comment.setName(form.getName());
-		comment.setContent(form.getContent());
+		BeanUtils.copyProperties(form, comment);
+
 		comment.setArticleId(Integer.parseInt(form.getArticleId()));
 		commentRepository.insert(comment);
+
+		return "redirect:/";
+	}
+
+	/**
+	 * 記事と記事に付随するコメントを一括削除する. 削除後は投稿一覧画面にリダイレクトする。
+	 * 
+	 * @param id 記事ID
+	 * @return 投稿一覧画面へのリダイレクト
+	 */
+	@RequestMapping("/delete-article")
+	public String deleteArticle(String id) {
+		commentRepository.deleteById(Integer.parseInt(id));
+		articleRepository.deleteById(Integer.parseInt(id));
 
 		return "redirect:/";
 	}
