@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Article;
+import com.example.form.ArticleForm;
 import com.example.repository.ArticleRepository;
 
 /**
@@ -23,6 +25,11 @@ import com.example.repository.ArticleRepository;
 public class ArticleController {
 	@Autowired
 	private ArticleRepository repository;
+
+	@ModelAttribute
+	public ArticleForm setUpForm() {
+		return new ArticleForm();
+	}
 
 	/**
 	 * 投稿一覧画面を表示する.<br>
@@ -48,8 +55,11 @@ public class ArticleController {
 	 * @return 投稿一覧画面へのリダイレクト
 	 */
 	@RequestMapping("/insert-article")
-	public String insertArticle(String name, String content) {
-		repository.insert(name, content);
+	public String insertArticle(ArticleForm form) {
+		Article article = new Article();
+		article.setName(form.getName());
+		article.setContent(form.getContent());
+		repository.insert(article);
 
 		return "redirect:/";
 	}

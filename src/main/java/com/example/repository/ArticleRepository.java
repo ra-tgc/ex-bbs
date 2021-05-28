@@ -49,9 +49,10 @@ public class ArticleRepository {
 	 * @param name    投稿者名
 	 * @param content 投稿内容
 	 */
-	public void insert(String name, String content) {
+	public void insert(Article article) {
 		String sql = "INSERT INTO articles(name, content) VALUES (:name, :content);";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", name).addValue("content", content);
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", article.getName()).addValue("content",
+				article.getContent());
 		template.update(sql, param);
 	}
 }
