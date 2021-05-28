@@ -16,7 +16,14 @@
 	<hr>
 	投稿者名：<span th:text="${article.name}">ダミー太郎</span><br>
 	投稿内容：<br>
-	<div class="div-pre" th:text="${article.content}">ダミー</div>
+	<div class="div-pre" th:text="${article.content}">ダミー</div><br>
+	<div th:each="commentList : ${commentMap.get(article.id)}">
+		<div th:each="comment : ${commentList}">
+			コメント者名：<span th:text="${comment.name}">ダミー</span><br>
+			コメント内容：<br>
+			<div class="div-pre" th:text="${comment.content}">ダミー</div><br>
+		</div>
+	</div>
 </div>
 </body>
 </html>
