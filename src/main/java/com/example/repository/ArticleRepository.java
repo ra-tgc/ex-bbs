@@ -55,4 +55,8 @@ public class ArticleRepository {
 				article.getContent());
 		template.update(sql, param);
 	}
+
+	public void deleteById(int id) {
+
+	}
 }

@@ -40,4 +40,16 @@ public class CommentRepository {
 		return commentList;
 	}
 
+	/**
+	 * コメントを挿入する.
+	 * 
+	 * @param comment 挿入するコメント
+	 */
+	public void insert(Comment comment) {
+		String sql = "INSERT INTO comments(name, content, article_id) VALUES (:name, :content, :articleId);";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", comment.getName())
+				.addValue("content", comment.getContent()).addValue("articleId", comment.getArticleId());
+		template.update(sql, param);
+	}
+
 }

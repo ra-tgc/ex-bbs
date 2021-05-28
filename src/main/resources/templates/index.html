@@ -17,6 +17,18 @@
 	投稿者名：<span th:text="${article.name}">ダミー太郎</span><br>
 	投稿内容：<br>
 	<div class="div-pre" th:text="${article.content}">ダミー</div><br>
+	<div th:each="commentList : ${article.commentList}">
+		<div th:each="comment : ${commentList}">
+			コメント者名：<span th:text="${comment.name}">ダミー</span><br>
+			コメント内容：<br>
+			<div class="div-pre" th:text="${comment.content}">ダミー</div><br>
+		</div>
+	</div>
+	<form action="index.html" th:action="@{/delete-article}" method="post">
+		<input type="hidden" name="id" th:value="${article.id}">
+		<button>記事削除</button>
+	</form>
+	<!--
 	<div th:each="commentList : ${commentMap.get(article.id)}">
 		<div th:each="comment : ${commentList}">
 			コメント者名：<span th:text="${comment.name}">ダミー</span><br>
@@ -24,6 +36,15 @@
 			<div class="div-pre" th:text="${comment.content}">ダミー</div><br>
 		</div>
 	</div>
+	-->
+	<form action="index.html" th:action="@{/insert-comment}" method="post" th:object="${commentForm}">
+		名前：<br>
+		<input type="text" name="name" th:field="*{name}"><br>
+		コメント：<br>
+		<textarea name="content" cols="20" rows="10" th:field="*{content}"></textarea><br>
+		<input type="hidden" name="articleId" th:value="${article.id}">
+		<button>コメント投稿</button>
+	</form>
 </div>
 </body>
 </html>
