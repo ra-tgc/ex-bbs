@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -51,8 +53,8 @@ public class ArticleController {
 	 */
 	@RequestMapping("/")
 	public String index(Model model) {
-//		List<Article> articleList = articleRepository.findAll();
 		List<Article> articleList = articleRepository.findAllWithComment();
+//		List<Article> articleList = articleRepository.findAll();
 		// Map<Integer, List<Comment>> commentMap = new LinkedHashMap<>();
 
 //		for (Article article : articleList) {
@@ -76,7 +78,12 @@ public class ArticleController {
 	 * @return 投稿一覧画面へのリダイレクト
 	 */
 	@RequestMapping("/insert-article")
-	public String insertArticle(ArticleForm form) {
+	public String insertArticle(@Validated ArticleForm form, BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			return index(model);
+		}
+
 		Article article = new Article();
 		BeanUtils.copyProperties(form, article);
 
@@ -94,7 +101,12 @@ public class ArticleController {
 	 * @return 投稿一覧画面へのリダイレクト
 	 */
 	@RequestMapping("/insert-comment")
-	public String insertComment(CommentForm form) {
+	public String insertComment(@Validated CommentForm form, BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			return index(model);
+		}
+
 		Comment comment = new Comment();
 		BeanUtils.copyProperties(form, comment);
 
@@ -112,7 +124,8 @@ public class ArticleController {
 	 */
 	@RequestMapping("/delete-article")
 	public String deleteArticle(String id) {
-		commentRepository.deleteById(Integer.parseInt(id));
+		articleRepository.changeCommentsTableForeignKeyConstraintToCascade();
+		// commentRepository.deleteById(Integer.parseInt(id));
 		articleRepository.deleteById(Integer.parseInt(id));
 
 		return "redirect:/";

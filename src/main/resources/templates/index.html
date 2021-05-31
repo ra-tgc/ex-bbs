@@ -7,44 +7,59 @@
 </head>
 <body>
 <h1>掲示板</h1>
+
+<!-- 記事のフォーム -->
 <form action="index.html" th:action="@{/insert-article}" method="post" th:object="${articleForm}">
+	<span th:errors="*{name}" style="color: red">エラー！</span><br>
 	投稿者名：<input type="text" name="name" th:field="*{name}"><br>
+	<span th:errors="*{content}" style="color: red">エラー！</span><br>
 	投稿内容：<textarea name="content" cols="20" rows="10" th:field="*{content}"></textarea><br>
 	<button>記事投稿</button>
 </form>
+<!-- 記事のフォーム終わり -->
+
+<!--  記事とコメントの表示 -->
 <div th:each="article : ${articleList}">
 	<hr>
+	
+	<!-- 記事表示 -->
 	投稿者名：<span th:text="${article.name}">ダミー太郎</span><br>
 	投稿内容：<br>
 	<div class="div-pre" th:text="${article.content}">ダミー</div><br>
+	<!-- 記事表示終わり -->
 	
+	<!-- 記事削除ボタン -->
 	<form action="index.html" th:action="@{/delete-article}" method="post">
 		<input type="hidden" name="id" th:value="${article.id}">
 		<button>記事削除</button>
 	</form>
+	<!-- 記事削除ボタン終わり -->
 	
+	<!-- コメント表示 -->
+	<span th:if="${article.commentList == null || article.commentList.isEmpty()}" th:text="コメントがまだありません">コメントがまだありません</span>
 	<div th:each="comment : ${article.commentList}">
-			コメント者名：<span th:text="${comment.name}">ダミー</span><br>
-			コメント内容：<br>
-			<div class="div-pre" th:text="${comment.content}">ダミー</div><br>
+		コメント者名：<span th:text="${comment.name}">ダミー</span><br>
+		コメント内容：<br>
+		<div class="div-pre" th:text="${comment.content}">ダミー</div><br>
 	</div>
-	<!--
-	<div th:each="commentList : ${commentMap.get(article.id)}">
-		<div th:each="comment : ${commentList}">
-			コメント者名：<span th:text="${comment.name}">ダミー</span><br>
-			コメント内容：<br>
-			<div class="div-pre" th:text="${comment.content}">ダミー</div><br>
-		</div>
-	</div>
-	-->
+	<!-- コメント表示終わり -->
+	
+	<!-- コメントのフォーム -->
 	<form action="index.html" th:action="@{/insert-comment}" method="post" th:object="${commentForm}">
+		<span th:errors="*{name}" style="color: red" th:if="*{articleId} == ${article.id}">エラー！</span><br>
 		名前：<br>
-		<input type="text" name="name" th:field="*{name}"><br>
+		<input type="text" name="name" th:field="*{name}" th:if="*{articleId} == ${article.id}"><br>
+		<input type="text" name="name" th:unless="*{articleId} == ${article.id}"><br>
+		<span th:errors="*{content}" style="color: red" th:if="*{articleId} == ${article.id}">エラー！</span><br>
 		コメント：<br>
-		<textarea name="content" cols="20" rows="10" th:field="*{content}"></textarea><br>
+		<textarea name="content" cols="20" rows="10" th:field="*{content}" th:if="*{articleId} == ${article.id}"></textarea><br>
+		<textarea name="content" cols="20" rows="10" th:unless="*{articleId} == ${article.id}"></textarea><br>
 		<input type="hidden" name="articleId" th:value="${article.id}">
 		<button>コメント投稿</button>
 	</form>
+	<!-- コメントのフォーム終わり -->
+	
 </div>
+<!-- 記事とコメントの表示終わり -->
 </body>
 </html>
