@@ -64,7 +64,6 @@ public class ArticleRepository {
 			preId = rs.getInt("id");
 		}
 		article.setCommentList(commentList);
-		articleList.add(article);
 
 		return articleList;
 	};

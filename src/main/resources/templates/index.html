@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link href="../../static/css/xxx.css" th:href="@{/css/xxx.css}" rel="stylesheet">
+<link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet">
 <title>タイトル</title>
 </head>
 <body>
@@ -32,6 +33,7 @@
 	<form action="index.html" th:action="@{/delete-article}" method="post">
 		<input type="hidden" name="id" th:value="${article.id}">
 		<button>記事削除</button>
+		<button type="button" th:value="${article.id}" class="goodButton"><i class="far fa-thumbs-up"></i></button><span class="count" th:id="'count-' + ${article.id}">0</span>
 	</form>
 	<!-- 記事削除ボタン終わり -->
 	
@@ -61,5 +63,34 @@
 	
 </div>
 <!-- 記事とコメントの表示終わり -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+"use strict";
+$(function(){
+	$(".goodButton").on("click", function(){
+		let hostUrl = "http://localhost:8080/ex-bbs/count-up";
+		let articleId = $(this).val();
+		
+		$.ajax({
+			url : hostUrl,
+			type : "post",
+			dataType : "json",
+			data : {
+				articleId : articleId
+			},
+			async : true,
+		}).done(function(data){	
+			console.log(data);
+			console.dir(JSON.stringify(data));
+			$("#count-" + articleId).text(data.goodCount);
+		}).fail(function(XMLHttpRequest, textStatus, errorThrown){
+			alert("正しい結果を得られませんでした。");
+			console.log("XMLHttpRequest：" + XMLHttpRequest.status);
+			console.log("textStatus：" + textStatus);
+			console.log("errorThrown：" + errorThrown.message);
+		});
+	});
+});
+</script>
 </body>
 </html>
